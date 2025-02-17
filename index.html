@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <title>Exercício do Pássaro</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        var passarinho; //variável do green bird
+
+        function preload() {           
+            this.load.image('bg', 'assets/bg_space.png');
+            this.load.spritesheet('bird', 'assets/bird-green.png', { frameWidth: 75, frameHeight: 75 });
+        }
+
+        function create() {
+            this.add.image(400, 300, 'bg').setScale(1.2);
+
+            //aqui, é criada e armazenada a sprite do green bird
+            passarinho = this.add.sprite(100, 300, 'bird').setScale(1.3);
+
+            //aqui, criei a animação do pássaro batendo asas
+            this.anims.create({
+                key: 'fly',
+                frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            //isso aqui inicia a animação do voo
+            passarinho.anims.play('fly', true);
+
+            //define a direção inicial que o green bird segue
+            passarinho.ida = true;
+        }
+
+        function update() {
+            //além de verificsar a posição do pássaro, também o move
+            if (passarinho.ida) {
+                passarinho.x += 5;
+                passarinho.setFlip(false, false); //mantém a direção normal, sem inverter a sprite de cabeça para baixo
+                if (passarinho.x >= 700) {
+                    passarinho.ida = false;
+                }
+            } else {
+                passarinho.x -= 5;
+                passarinho.setFlip(true, false); //inverte o sprite quando volta, justamente para impedir o que poderia rolar no comentário anterior, né tchê
+                if (passarinho.x <= 100) {
+                    passarinho.ida = true;
+                }
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
+
